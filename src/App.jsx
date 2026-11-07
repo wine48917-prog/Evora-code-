@@ -729,6 +729,6 @@ function App() {
       <footer className="copyright">
         © 2026 WINE 🍷 — All Rights Reserved.
       </footer>
-    </main>
+    </div>
   );
 }
