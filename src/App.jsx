@@ -674,54 +674,36 @@ function App() {
         </main>
       </div>
 
+      
       {newFileOpen && (
-        <div className="modal-backdrop" onClick={() => setNewFileOpen(false)}>
-          <div className="new-file-modal" onClick={event => event.stopPropagation()}>
+        <div
+          className="modal-backdrop"
+          onClick={() => setNewFileOpen(false)}
+        >
+          <div
+            className="new-file-modal"
+            onClick={event => event.stopPropagation()}
+          >
             <div className="modal-title">
               <div>
                 <FilePlus size={19} />
                 <b>Create New File</b>
               </div>
-              <button className="tiny-btn" onClick={() => setNewFileOpen(false)}>
+
+              <button
+                className="tiny-btn"
+                onClick={() => setNewFileOpen(false)}
+              >
                 <X size={17} />
               </button>
             </div>
 
-            <label>File name</label>
-            <input
-              autoFocus
-              placeholder="example.js"
-              value={newFileName}
-              onChange={event => setNewFileName(event.target.value)}
-              onKeyDown={event => event.key === "Enter" && createFile()}
-            />
-
-            <div className="modal-actions">
-              <button className="cancel-btn" onClick={() => setNewFileOpen(false)}>
-                Cancel
-              </button>
-              <button className="create-btn" onClick={createFile}>
-                <Plus size={15} />
-                Create file
-              </button>
-            </div>
-          </div>
-        </div>
-           <div className="copyright">
-        © 2026 WINE 🍷 — All Rights Reserved.
-      </div>
-    </div>
-  );
-}
-
-export default App;
             <div className="modal-body">
               <input
                 type="text"
                 placeholder="File name (example: index.html)"
                 value={newFileName}
                 onChange={event => setNewFileName(event.target.value)}
-                autoFocus
               />
 
               <div className="modal-actions">
