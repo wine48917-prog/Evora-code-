@@ -8,27 +8,9 @@ import { json } from "@codemirror/lang-json";
 import { EditorView } from "@codemirror/view";
 import JSZip from "jszip";
 import {
-  Code2,
-  Play,
-  Eye,
-  FolderOpen,
-  FilePlus,
-  Download,
-  Trash2,
-  Smartphone,
-  Monitor,
-  Terminal,
-  X,
-  Menu,
-  RefreshCw,
-  ChevronRight,
-  ChevronDown,
-  Copy,
-  Maximize2,
-  Settings,
-  Search,
-  Files,
-  Plus
+  Code2, Play, Eye, FolderOpen, FilePlus, Download, Trash2,
+  Smartphone, Monitor, Terminal, X, RefreshCw, ChevronRight,
+  ChevronDown, Copy, Maximize2, Files, Plus
 } from "lucide-react";
 
 const initialFiles = [
@@ -39,19 +21,18 @@ const initialFiles = [
     content: `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My First Website</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Website</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="container">
-    <h1>Welcome to EVORA CODE</h1>
-    <p>Your coding journey starts here.</p>
-    <button onclick="sayHello()">Get Started</button>
-  </main>
-
-  <script src="script.js"></script>
+<main class="container">
+<h1>Welcome to EVORA CODE</h1>
+<p>Your coding journey starts here.</p>
+<button onclick="sayHello()">Get Started</button>
+</main>
+<script src="script.js"></script>
 </body>
 </html>`
   },
@@ -60,41 +41,36 @@ const initialFiles = [
     name: "style.css",
     language: "css",
     content: `* {
-  box-sizing: border-box;
+box-sizing: border-box;
 }
-
 body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: #080d18;
-  color: #eaf3ff;
-  font-family: Arial, sans-serif;
+margin: 0;
+min-height: 100vh;
+display: grid;
+place-items: center;
+background: #080d18;
+color: #eaf3ff;
+font-family: Arial, sans-serif;
 }
-
 .container {
-  text-align: center;
-  padding: 40px;
+text-align: center;
+padding: 40px;
 }
-
 h1 {
-  color: #72c9ff;
-  font-size: 36px;
+color: #72c9ff;
+font-size: 36px;
 }
-
 p {
-  color: #9baec5;
+color: #9baec5;
 }
-
 button {
-  background: #38a9ed;
-  color: #06111d;
-  border: 0;
-  border-radius: 10px;
-  padding: 13px 24px;
-  cursor: pointer;
-  font-weight: bold;
+background: #38a9ed;
+color: #06111d;
+border: 0;
+border-radius: 10px;
+padding: 13px 24px;
+cursor: pointer;
+font-weight: bold;
 }`
   },
   {
@@ -102,8 +78,8 @@ button {
     name: "script.js",
     language: "javascript",
     content: `function sayHello() {
-  alert("Welcome to EVORA CODE!");
-  console.log("EVORA CODE is running!");
+alert("Welcome to EVORA CODE!");
+console.log("EVORA CODE is running!");
 }`
   }
 ];
@@ -128,17 +104,8 @@ const editorTheme = EditorView.theme({
   ".cm-activeLine": {
     backgroundColor: "#152238"
   },
-  ".cm-activeLineGutter": {
-    backgroundColor: "#152238"
-  },
   "&.cm-focused": {
     outline: "none"
-  },
-  ".cm-cursor": {
-    borderLeftColor: "#64c9ff"
-  },
-  ".cm-selectionBackground": {
-    backgroundColor: "#25486b !important"
   }
 });
 
@@ -147,13 +114,13 @@ function getLanguage(name) {
 
   if (ext === "html" || ext === "htm") return html();
   if (ext === "css") return css();
-  if (ext === "js" || ext === "jsx" || ext === "ts") return javascript();
+  if (["js", "jsx", "ts"].includes(ext)) return javascript();
   if (ext === "json") return json();
 
   return [];
 }
 
-function App() {
+export default function App() {
   const [files, setFiles] = useState(() => {
     try {
       const saved = localStorage.getItem("evora-files");
@@ -176,7 +143,8 @@ function App() {
 
   const iframeRef = useRef(null);
 
-  const activeFile = files.find(file => file.id === activeId) || files[0];
+  const activeFile =
+    files.find(file => file.id === activeId) || files[0];
 
   useEffect(() => {
     localStorage.setItem("evora-files", JSON.stringify(files));
@@ -197,13 +165,18 @@ function App() {
     }
 
     window.addEventListener("message", receiveMessage);
-    return () => window.removeEventListener("message", receiveMessage);
+
+    return () => {
+      window.removeEventListener("message", receiveMessage);
+    };
   }, []);
 
   const updateCode = value => {
     setFiles(prev =>
       prev.map(file =>
-        file.id === activeId ? { ...file, content: value } : file
+        file.id === activeId
+          ? { ...file, content: value }
+          : file
       )
     );
   };
@@ -212,6 +185,7 @@ function App() {
     const name = newFileName.trim();
 
     if (!name) return;
+
     if (files.some(file => file.name === name)) {
       alert("A file with this name already exists.");
       return;
@@ -246,9 +220,11 @@ function App() {
     }
 
     const file = files.find(item => item.id === id);
+
     if (!window.confirm(`Delete ${file?.name}?`)) return;
 
     const remaining = files.filter(item => item.id !== id);
+
     setFiles(remaining);
 
     if (activeId === id) {
@@ -264,7 +240,8 @@ function App() {
     let output = htmlFile?.content || "<h1>No index.html file found</h1>";
 
     if (cssFile) {
-      const styleTag = `<style>${cssFile.content.replace(/<\/style/gi, "<\\/style")}</style>`;
+      const styleTag =
+        `<style>${cssFile.content.replace(/<\/style/gi, "<\\/style")}</style>`;
 
       if (output.includes("</head>")) {
         output = output.replace("</head>", `${styleTag}</head>`);
@@ -273,8 +250,7 @@ function App() {
       }
     }
 
-    if (jsFile) {
-      const bridge = `
+    const bridge = `
 <script>
 (function() {
   const send = (type, args) => {
@@ -295,6 +271,7 @@ function App() {
 
   ["log", "warn", "error", "info"].forEach(type => {
     const original = console[type];
+
     console[type] = function(...args) {
       send(type, args);
       original.apply(console, args);
@@ -307,13 +284,22 @@ function App() {
 })();
 <\/script>`;
 
-      const scriptTag = `<script>${jsFile.content.replace(/<\/script/gi, "<\\/script")}<\/script>`;
+    if (jsFile) {
+      const scriptTag =
+        `<script>${jsFile.content.replace(/<\/script/gi, "<\\/script")}<\/script>`;
 
       if (output.includes("</body>")) {
-        output = output.replace("</body>", `${bridge}${scriptTag}</body>`);
+        output = output.replace(
+          "</body>",
+          `${bridge}${scriptTag}</body>`
+        );
       } else {
         output += bridge + scriptTag;
       }
+    } else if (output.includes("</body>")) {
+      output = output.replace("</body>", `${bridge}</body>`);
+    } else {
+      output += bridge;
     }
 
     return output;
@@ -392,9 +378,10 @@ function App() {
         <button
           className="brand"
           onClick={() => setMobileMenu(!mobileMenu)}
-          title="Toggle menu"
         >
-          <span className="brand-icon"><Code2 size={21} /></span>
+          <span className="brand-icon">
+            <Code2 size={21} />
+          </span>
           <span>EVORA <b>CODE</b></span>
           <small>V2</small>
         </button>
@@ -408,7 +395,7 @@ function App() {
             <Download size={17} />
           </button>
 
-          <button className="icon-btn" onClick={downloadProject} title="Export project ZIP">
+          <button className="icon-btn" onClick={downloadProject} title="Export ZIP">
             <FolderOpen size={17} />
           </button>
 
@@ -425,10 +412,10 @@ function App() {
           <div className="sidebar-heading">
             <span>EXPLORER</span>
             <div>
-              <button className="tiny-btn" onClick={() => setNewFileOpen(true)} title="New file">
+              <button className="tiny-btn" onClick={() => setNewFileOpen(true)}>
                 <FilePlus size={16} />
               </button>
-              <button className="tiny-btn" onClick={resetProject} title="Reset project">
+              <button className="tiny-btn" onClick={resetProject}>
                 <RefreshCw size={15} />
               </button>
             </div>
@@ -459,7 +446,6 @@ function App() {
                     event.stopPropagation();
                     deleteFile(file.id);
                   }}
-                  title="Delete file"
                 >
                   <Trash2 size={13} />
                 </button>
@@ -482,7 +468,6 @@ function App() {
             <button
               className="toolbar-btn sidebar-toggle"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              title="Toggle explorer"
             >
               <Files size={17} />
             </button>
@@ -508,7 +493,6 @@ function App() {
               <button
                 className={`toolbar-btn ${activePanel === "editor" ? "active-tool" : ""}`}
                 onClick={() => setActivePanel("editor")}
-                title="Editor"
               >
                 <Code2 size={17} />
               </button>
@@ -516,7 +500,6 @@ function App() {
               <button
                 className={`toolbar-btn ${activePanel === "preview" ? "active-tool" : ""}`}
                 onClick={() => setActivePanel("preview")}
-                title="Preview"
               >
                 <Eye size={17} />
               </button>
@@ -532,10 +515,10 @@ function App() {
 
             <div className="editor-actions">
               <span className="language-label">{activeFile?.language || "text"}</span>
-              <button className="tiny-btn" onClick={copyCode} title="Copy">
+              <button className="tiny-btn" onClick={copyCode}>
                 <Copy size={15} />
               </button>
-              <button className="tiny-btn" onClick={downloadCurrentFile} title="Download">
+              <button className="tiny-btn" onClick={downloadCurrentFile}>
                 <Download size={15} />
               </button>
             </div>
@@ -575,26 +558,31 @@ function App() {
                   <button
                     className={device === "mobile" ? "selected-device" : ""}
                     onClick={() => setDevice("mobile")}
-                    title="Mobile preview"
+                    title="Mobile"
                   >
                     <Smartphone size={16} />
                   </button>
+
                   <button
                     className={device === "desktop" ? "selected-device" : ""}
                     onClick={() => setDevice("desktop")}
-                    title="Desktop preview"
+                    title="Desktop"
                   >
                     <Monitor size={16} />
                   </button>
-                  <button onClick={() => setPreviewKey(prev => prev + 1)} title="Refresh preview">
+
+                  <button onClick={() => setPreviewKey(prev => prev + 1)} title="Refresh">
                     <RefreshCw size={15} />
                   </button>
-                  <button onClick={() => {
-                    const html = buildPreview();
-                    const blob = new Blob([html], { type: "text/html" });
-                    const url = URL.createObjectURL(blob);
-                    window.open(url, "_blank");
-                  }} title="Open in new tab">
+
+                  <button
+                    onClick={() => {
+                      const blob = new Blob([buildPreview()], { type: "text/html" });
+                      const url = URL.createObjectURL(blob);
+                      window.open(url, "_blank");
+                    }}
+                    title="Open in new tab"
+                  >
                     <Maximize2 size={15} />
                   </button>
                 </div>
@@ -621,19 +609,12 @@ function App() {
                   <span>CONSOLE</span>
                   <small>{consoleMessages.length}</small>
                 </div>
+
                 <div>
-                  <button
-                    className="tiny-btn"
-                    onClick={() => setConsoleMessages([])}
-                    title="Clear console"
-                  >
+                  <button className="tiny-btn" onClick={() => setConsoleMessages([])}>
                     <Trash2 size={14} />
                   </button>
-                  <button
-                    className="tiny-btn"
-                    onClick={() => setConsoleOpen(false)}
-                    title="Close console"
-                  >
+                  <button className="tiny-btn" onClick={() => setConsoleOpen(false)}>
                     <X size={16} />
                   </button>
                 </div>
@@ -641,7 +622,9 @@ function App() {
 
               <div className="console-output">
                 {consoleMessages.length === 0 ? (
-                  <div className="console-empty">Console is ready. Run your code to see messages.</div>
+                  <div className="console-empty">
+                    Console is ready. Run your code to see messages.
+                  </div>
                 ) : (
                   consoleMessages.map((item, index) => (
                     <div className={`console-line ${item.type}`} key={index}>
@@ -662,6 +645,7 @@ function App() {
               <span className="status-divider">|</span>
               {activeFile?.language || "text"}
             </div>
+
             <div>
               UTF-8
               <span className="status-divider">|</span>
@@ -682,12 +666,14 @@ function App() {
                 <FilePlus size={19} />
                 <b>Create New File</b>
               </div>
+
               <button className="tiny-btn" onClick={() => setNewFileOpen(false)}>
                 <X size={17} />
               </button>
             </div>
 
             <label>File name</label>
+
             <input
               autoFocus
               placeholder="example.js"
@@ -700,6 +686,7 @@ function App() {
               <button className="cancel-btn" onClick={() => setNewFileOpen(false)}>
                 Cancel
               </button>
+
               <button className="create-btn" onClick={createFile}>
                 <Plus size={15} />
                 Create file
@@ -707,11 +694,12 @@ function App() {
             </div>
           </div>
         </div>
-           <div className="copyright">
+      )}
+
+      <div className="copyright">
         © 2026 WINE 🍷 — All Rights Reserved.
       </div>
     </div>
   );
-}
-
-export default App;
+                }
+      
